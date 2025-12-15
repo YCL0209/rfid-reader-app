@@ -27,9 +27,8 @@ public class MainControlPanel extends JPanel {
 
     // 讀取控制元件
     private JComboBox<String> protocolComboBox;
-    private JCheckBox readTidCheckBox;
-    private JCheckBox readUserDataCheckBox;
-    private JButton startReadButton;
+    private JButton fastReadButton;
+    private JButton fullReadButton;
     private JButton stopReadButton;
     private JButton clearButton;
 
@@ -114,16 +113,15 @@ public class MainControlPanel extends JPanel {
         protocolComboBox = new JComboBox<>(new String[]{"EPC (6C)", "ISO 6B", "國標 GB"});
         readControlPanel.add(protocolComboBox);
 
-        readTidCheckBox = new JCheckBox("讀取 TID", true);
-        readControlPanel.add(readTidCheckBox);
+        fastReadButton = new JButton("快速盤存(EPC)");
+        fastReadButton.setEnabled(false);
+        fastReadButton.addActionListener(e -> startReading(false, false));
+        readControlPanel.add(fastReadButton);
 
-        readUserDataCheckBox = new JCheckBox("讀取用戶區", true);
-        readControlPanel.add(readUserDataCheckBox);
-
-        startReadButton = new JButton("開始讀取");
-        startReadButton.setEnabled(false);
-        startReadButton.addActionListener(e -> startReading());
-        readControlPanel.add(startReadButton);
+        fullReadButton = new JButton("完整讀取(EPC+TID+UserData)");
+        fullReadButton.setEnabled(false);
+        fullReadButton.addActionListener(e -> startReading(true, true));
+        readControlPanel.add(fullReadButton);
 
         stopReadButton = new JButton("停止讀取");
         stopReadButton.setEnabled(false);
@@ -247,7 +245,8 @@ public class MainControlPanel extends JPanel {
                     tagReader.setOnTagReadCallback(this::onTagRead);
                     tagReader.setOnReadOverCallback(() -> {
                         SwingUtilities.invokeLater(() -> {
-                            startReadButton.setEnabled(true);
+                            fastReadButton.setEnabled(true);
+                            fullReadButton.setEnabled(true);
                             stopReadButton.setEnabled(false);
                         });
                     });
@@ -284,13 +283,13 @@ public class MainControlPanel extends JPanel {
 
     /**
      * 開始讀取
+     * @param readTid 是否讀取 TID
+     * @param readUserData 是否讀取用戶數據區
      */
-    private void startReading() {
+    private void startReading(boolean readTid, boolean readUserData) {
         if (tagReader == null) return;
 
         int protocolIndex = protocolComboBox.getSelectedIndex();
-        boolean readTid = readTidCheckBox.isSelected();
-        boolean readUserData = readUserDataCheckBox.isSelected();
 
         boolean success = false;
 
@@ -310,7 +309,8 @@ public class MainControlPanel extends JPanel {
         }
 
         if (success) {
-            startReadButton.setEnabled(false);
+            fastReadButton.setEnabled(false);
+            fullReadButton.setEnabled(false);
             stopReadButton.setEnabled(true);
         } else {
             JOptionPane.showMessageDialog(this, "啟動讀取失敗", "錯誤", JOptionPane.ERROR_MESSAGE);
@@ -323,7 +323,8 @@ public class MainControlPanel extends JPanel {
     private void stopReading() {
         if (tagReader != null) {
             tagReader.stopRead();
-            startReadButton.setEnabled(true);
+            fastReadButton.setEnabled(true);
+            fullReadButton.setEnabled(true);
             stopReadButton.setEnabled(false);
         }
     }
@@ -373,7 +374,8 @@ public class MainControlPanel extends JPanel {
             connectionStatusLabel.setForeground(new Color(0, 128, 0));
             connectButton.setEnabled(false);
             disconnectButton.setEnabled(true);
-            startReadButton.setEnabled(true);
+            fastReadButton.setEnabled(true);
+            fullReadButton.setEnabled(true);
             ipField.setEnabled(false);
             portField.setEnabled(false);
         } else {
@@ -381,7 +383,8 @@ public class MainControlPanel extends JPanel {
             connectionStatusLabel.setForeground(Color.RED);
             connectButton.setEnabled(true);
             disconnectButton.setEnabled(false);
-            startReadButton.setEnabled(false);
+            fastReadButton.setEnabled(false);
+            fullReadButton.setEnabled(false);
             stopReadButton.setEnabled(false);
             ipField.setEnabled(true);
             portField.setEnabled(true);
