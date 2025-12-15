@@ -1,5 +1,6 @@
 package com.rfid.ui;
 
+import com.gg.reader.api.protocol.gx.EnumG;
 import com.rfid.connection.ReaderConnection;
 import com.rfid.reader.TagInfo;
 import com.rfid.reader.TagReader;
@@ -294,7 +295,7 @@ public class MainControlPanel extends JPanel {
         boolean success = false;
 
         // 天線設定：使用天線 1
-        int antennaEnable = 1; // EnumG.AntennaNo_1
+        long antennaEnable = EnumG.AntennaNo_1;
 
         switch (protocolIndex) {
             case 0: // EPC 6C

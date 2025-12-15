@@ -1,7 +1,6 @@
 package com.rfid.reader;
 
-import com.gg.reader.api.dal.GClient;
-import com.gg.reader.api.dal.handler.*;
+import com.gg.reader.api.dal.*;
 import com.gg.reader.api.protocol.gx.*;
 import com.rfid.connection.ReaderConnection;
 
@@ -194,7 +193,7 @@ public class TagReader {
     /**
      * 開始讀取 EPC 標籤
      */
-    public boolean startReadEpc(int antennaEnable, ReadMode mode, boolean readTid, boolean readUserData) {
+    public boolean startReadEpc(long antennaEnable, ReadMode mode, boolean readTid, boolean readUserData) {
         if (!checkConnection()) return false;
 
         try {
@@ -239,7 +238,7 @@ public class TagReader {
     /**
      * 開始讀取 6B 標籤
      */
-    public boolean startRead6b(int antennaEnable, ReadMode mode) {
+    public boolean startRead6b(long antennaEnable, ReadMode mode) {
         if (!checkConnection()) return false;
 
         try {
@@ -275,7 +274,7 @@ public class TagReader {
     /**
      * 開始讀取 GB 國標標籤
      */
-    public boolean startReadGb(int antennaEnable, ReadMode mode, boolean readTid, boolean readUserData) {
+    public boolean startReadGb(long antennaEnable, ReadMode mode, boolean readTid, boolean readUserData) {
         if (!checkConnection()) return false;
 
         try {
