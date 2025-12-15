@@ -1,0 +1,24 @@
+# Compiled class files
+*.class
+out/
+
+# Log files
+*.log
+
+# Package files
+*.jar
+!lib/*.jar
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
