@@ -48,6 +48,9 @@ public class MainControlPanel extends JPanel {
     private JLabel totalTagsLabel;
     private int totalTags = 0;
 
+    // 斷線處理標記（防止重複觸發）
+    private volatile boolean isDisconnectHandled = false;
+
     public MainControlPanel() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -192,13 +195,17 @@ public class MainControlPanel extends JPanel {
      */
     private void setupConnectionCallbacks() {
         connection.setOnDisconnectedCallback(readerName -> {
-            SwingUtilities.invokeLater(() -> {
-                updateConnectionStatus(false);
-                JOptionPane.showMessageDialog(this,
-                    "連接已斷開: " + readerName,
-                    "連接斷開",
-                    JOptionPane.WARNING_MESSAGE);
-            });
+            // 防止重複處理斷線事件
+            if (!isDisconnectHandled) {
+                isDisconnectHandled = true;
+                SwingUtilities.invokeLater(() -> {
+                    updateConnectionStatus(false);
+                    connectionStatusLabel.setText("連接已斷開");
+                    connectionStatusLabel.setForeground(Color.ORANGE);
+                    // 不再彈窗，只更新狀態和輸出日誌
+                    System.out.println("連接已斷開: " + readerName);
+                });
+            }
         });
 
         connection.setOnLogCallback(msg -> {
@@ -237,6 +244,8 @@ public class MainControlPanel extends JPanel {
 
             SwingUtilities.invokeLater(() -> {
                 if (success) {
+                    // 重置斷線處理標記
+                    isDisconnectHandled = false;
                     updateConnectionStatus(true);
 
                     // 建立標籤讀取器
