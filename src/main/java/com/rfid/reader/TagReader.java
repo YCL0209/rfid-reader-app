@@ -64,11 +64,19 @@ public class TagReader {
         client.onTagEpcLog = new HandlerTagEpcLog() {
             @Override
             public void log(String readerName, LogBaseEpcInfo info) {
-                if (info != null && info.getResult() == 0) {
+                if (info != null) {
                     TagInfo tagInfo = new TagInfo();
                     tagInfo.setEpc(info.getEpc());
-                    tagInfo.setTid(info.getTid());
-                    tagInfo.setUserData(info.getUserdata());
+
+                    // 只有 result == 0 時才設置 TID 和 UserData
+                    if (info.getResult() == 0) {
+                        tagInfo.setTid(info.getTid());
+                        tagInfo.setUserData(info.getUserdata());
+                    } else {
+                        // 記錄錯誤但仍顯示 EPC
+                        TagReader.this.log("標籤讀取部分失敗 (result=" + info.getResult() + "): " + info.getEpc());
+                    }
+
                     tagInfo.setRssi(info.getRssi());
                     tagInfo.setAntennaId(info.getAntId());
                     tagInfo.setTagType(TagInfo.TagType.EPC_6C);
@@ -96,10 +104,16 @@ public class TagReader {
         client.onTag6bLog = new HandlerTag6bLog() {
             @Override
             public void log(String readerName, LogBase6bInfo info) {
-                if (info != null && info.getResult() == 0) {
+                if (info != null) {
                     TagInfo tagInfo = new TagInfo();
                     tagInfo.setTid(info.getTid());
-                    tagInfo.setUserData(info.getUserdata());
+
+                    if (info.getResult() == 0) {
+                        tagInfo.setUserData(info.getUserdata());
+                    } else {
+                        TagReader.this.log("6B 標籤讀取部分失敗 (result=" + info.getResult() + "): " + info.getTid());
+                    }
+
                     tagInfo.setRssi(info.getRssi());
                     tagInfo.setAntennaId(info.getAntId());
                     tagInfo.setTagType(TagInfo.TagType.ISO_6B);
@@ -127,11 +141,17 @@ public class TagReader {
         client.onTagGbLog = new HandlerTagGbLog() {
             @Override
             public void log(String readerName, LogBaseGbInfo info) {
-                if (info != null && info.getResult() == 0) {
+                if (info != null) {
                     TagInfo tagInfo = new TagInfo();
                     tagInfo.setEpc(info.getEpc());
-                    tagInfo.setTid(info.getTid());
-                    tagInfo.setUserData(info.getUserdata());
+
+                    if (info.getResult() == 0) {
+                        tagInfo.setTid(info.getTid());
+                        tagInfo.setUserData(info.getUserdata());
+                    } else {
+                        TagReader.this.log("GB 標籤讀取部分失敗 (result=" + info.getResult() + "): " + info.getEpc());
+                    }
+
                     tagInfo.setRssi(info.getRssi());
                     tagInfo.setAntennaId(info.getAntId());
                     tagInfo.setTagType(TagInfo.TagType.GB);
@@ -159,11 +179,17 @@ public class TagReader {
         client.onTagGJbLog = new HandlerTagGJbLog() {
             @Override
             public void log(String readerName, LogBaseGJbInfo info) {
-                if (info != null && info.getResult() == 0) {
+                if (info != null) {
                     TagInfo tagInfo = new TagInfo();
                     tagInfo.setEpc(info.getEpc());
-                    tagInfo.setTid(info.getTid());
-                    tagInfo.setUserData(info.getUserdata());
+
+                    if (info.getResult() == 0) {
+                        tagInfo.setTid(info.getTid());
+                        tagInfo.setUserData(info.getUserdata());
+                    } else {
+                        TagReader.this.log("GJB 標籤讀取部分失敗 (result=" + info.getResult() + "): " + info.getEpc());
+                    }
+
                     tagInfo.setRssi(info.getRssi());
                     tagInfo.setAntennaId(info.getAntId());
                     tagInfo.setTagType(TagInfo.TagType.GJB);
