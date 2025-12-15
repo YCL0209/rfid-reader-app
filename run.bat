@@ -7,6 +7,7 @@ echo ==========================================
 set PROJECT_DIR=%~dp0
 set LIB_DIR=%PROJECT_DIR%lib
 set OUT_DIR=%PROJECT_DIR%out
+set JAVA="C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot\bin\java.exe"
 
 if not exist "%OUT_DIR%\com" (
     echo 尚未編譯，先執行編譯...
@@ -19,6 +20,6 @@ if not exist "%OUT_DIR%\com" (
 )
 
 echo 啟動應用程式...
-java -cp "%OUT_DIR%;%LIB_DIR%\*" -Dfile.encoding=UTF-8 com.rfid.Main
+%JAVA% -cp "%OUT_DIR%;%LIB_DIR%\*" -Dfile.encoding=UTF-8 com.rfid.Main
 
 pause

@@ -8,13 +8,14 @@ set PROJECT_DIR=%~dp0
 set SRC_DIR=%PROJECT_DIR%src\main\java
 set LIB_DIR=%PROJECT_DIR%lib
 set OUT_DIR=%PROJECT_DIR%out
+set JAVAC="C:\Program Files\Eclipse Adoptium\jdk-25.0.1.8-hotspot\bin\javac.exe"
 
 if not exist "%OUT_DIR%" mkdir "%OUT_DIR%"
 
 echo 編譯 Java 檔案...
 dir /s /b "%SRC_DIR%\*.java" > "%OUT_DIR%\sources.txt"
 
-javac -encoding UTF-8 -cp "%LIB_DIR%\*" -d "%OUT_DIR%" @"%OUT_DIR%\sources.txt"
+%JAVAC% -encoding UTF-8 -cp "%LIB_DIR%\*" -d "%OUT_DIR%" @"%OUT_DIR%\sources.txt"
 
 if %errorlevel% equ 0 (
     echo ==========================================
